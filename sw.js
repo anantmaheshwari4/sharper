@@ -1,7 +1,7 @@
 // Sharper service worker
 // BUMP THIS VERSION NUMBER every time you change any file and redeploy,
 // or your phone will keep showing the old cached version.
-const VERSION = "v3";
+const VERSION = "v2";
 const CACHE_NAME = "sharper-" + VERSION;
 
 // The files that make up the app shell, cached so it works offline.
