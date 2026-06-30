@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sharper</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ HOME ============ -->
+  <section id="screen-home" class="screen active">
+
+    <header class="home-header">
+      <span class="wordmark">Sharper</span>
+      <button class="diamond burger" onclick="toggleMenu()" aria-label="Menu">
+        <span class="burger-lines"></span>
+      </button>
+    </header>
+
+    <nav id="burger-menu" class="burger-menu">
+      <button onclick="showScreen('screen-all')">All Entries</button>
+      <button onclick="showScreen('screen-add')">Add to my list</button>
+    </nav>
+
+    <div class="divider-row">
+      <span class="divider-label">Today's three</span>
+      <span class="divider-rule"></span>
+      <span class="divider-date" id="today-date"></span>
+    </div>
+
+    <div class="home-tiles">
+
+      <button class="tile tile-recollect" onclick="showScreen('screen-retrieve')">
+        <span class="tile-text">
+          <span class="tile-title">Recollect</span>
+          <span class="tile-sub">let's see what you remember</span>
+        </span>
+        <span class="diamond tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </span>
+      </button>
+
+      <button class="tile tile-word" onclick="openToday('word')">
+        <span class="tile-text">
+          <span class="tile-title">Word of the day</span>
+          <span class="tile-sub">a word worth keeping</span>
+        </span>
+        <span class="diamond tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="13 6 19 12 13 18"></polyline>
+          </svg>
+        </span>
+      </button>
+
+      <button class="tile tile-phrase" onclick="openToday('phrase')">
+        <span class="tile-text">
+          <span class="tile-title">Phrase of the day</span>
+          <span class="tile-sub">a phrase worth stealing</span>
+        </span>
+        <span class="diamond tile-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="13 6 19 12 13 18"></polyline>
+          </svg>
+        </span>
+      </button>
+
+    </div>
+
+  </section>
+
+<!-- ============ RECOLLECT ============ -->
+  <section id="screen-retrieve" class="screen">
+
+    <div class="detail-bar detail-bar-recollect">
+      <button class="back-btn" onclick="goBack()"><span>&larr;</span></button>
+      <span class="detail-label">Recollect</span>
+      <span class="retrieve-counter" id="retrieve-counter"></span>
+    </div>
+
+    <div id="retrieve-area"><!-- app.js injects the current card here --></div>
+
+  </section>
+
+  <!-- ============ WORD (detail screen) ============ -->
+  <section id="screen-word" class="screen">
+
+    <div class="detail-bar">
+      <button class="back-btn" onclick="goBack()"><span>&larr;</span></button>
+      <span class="detail-label">Word of the day</span>
+      <button class="diamond delete-btn is-hidden" id="word-delete" onclick="askDelete()" aria-label="Remove from my list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="delete-confirm is-hidden" id="word-delete-confirm">
+      <span class="delete-confirm-text">Delete this entry?</span>
+      <button class="delete-confirm-yes" onclick="confirmDelete()">Delete</button>
+      <button class="delete-confirm-no" onclick="cancelDelete()">Cancel</button>
+    </div>
+
+    <article class="detail-card">
+      <div class="detail-panel">
+        <h1 class="hero" id="word-term">—</h1>
+      </div>
+      <div class="detail-body">
+        <span class="chip" id="word-register">—</span>
+        <div class="field">
+          <span class="field-label">Meaning</span>
+          <p class="field-value" id="word-meaning">—</p>
+        </div>
+        <div class="field">
+          <span class="field-label">Replaces</span>
+          <p class="field-value" id="word-replaces">—</p>
+        </div>
+        <div class="field">
+          <span class="field-label">Example</span>
+          <p class="field-value" id="word-example">—</p>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============ PHRASE (detail screen) ============ -->
+  <section id="screen-phrase" class="screen">
+
+    <div class="detail-bar detail-bar-phrase">
+      <button class="back-btn" onclick="goBack()"><span>&larr;</span></button>
+      <span class="detail-label" id="phrase-label">Phrase of the day</span>
+      <button class="diamond delete-btn is-hidden" id="phrase-delete" onclick="askDelete()" aria-label="Remove from my list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="delete-confirm is-hidden" id="phrase-delete-confirm">
+      <span class="delete-confirm-text">Delete this entry?</span>
+      <button class="delete-confirm-yes" onclick="confirmDelete()">Delete</button>
+      <button class="delete-confirm-no" onclick="cancelDelete()">Cancel</button>
+    </div>
+
+    <article class="detail-card">
+      <div class="detail-panel detail-panel-phrase">
+        <h1 class="hero hero-phrase" id="phrase-term">—</h1>
+      </div>
+      <div class="detail-body">
+        <span class="chip" id="phrase-register">—</span>
+        <div class="field">
+          <span class="field-label">Meaning</span>
+          <p class="field-value" id="phrase-meaning">—</p>
+        </div>
+        <div class="field">
+          <span class="field-label">Replaces</span>
+          <p class="field-value" id="phrase-replaces">—</p>
+        </div>
+        <div class="field">
+          <span class="field-label">Example</span>
+          <p class="field-value" id="phrase-example">—</p>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============ ALL ENTRIES ============ -->
+  <section id="screen-all" class="screen">
+
+    <header class="list-header">
+      <button class="back-btn back-btn-accent" onclick="showScreen('screen-home')"><span>&larr;</span></button>
+      <span class="list-title">All Entries</span>
+      <span class="list-count" id="all-count"></span>
+    </header>
+
+    <div class="search-wrap">
+      <span class="search-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </span>
+      <input type="text" id="all-search" class="search-box" placeholder="Search words &amp; phrases…">
+    </div>
+
+    <div id="all-list"><!-- app.js injects .entry-row items here --></div>
+
+  </section>
+
+<!-- ============ ADD TO MY LIST ============ -->
+  <section id="screen-add" class="screen">
+
+    <header class="list-header">
+      <button class="back-btn back-btn-accent" onclick="showScreen('screen-home')"><span>&larr;</span></button>
+      <span class="list-title">Add to my list</span>
+    </header>
+
+    <div class="add-body">
+      <p class="add-guide">Paste your batch from Claude below — one or more entries, each separated by a line with <span class="add-sep">---</span></p>
+      <p id="paste-status" class="paste-status"></p>
+      <textarea id="paste-box" class="paste-box" placeholder="type: word&#10;term: ...&#10;meaning: ...&#10;replaces: ...&#10;example: ...&#10;register: ..."></textarea>
+      <button id="save-batch" class="save-btn">Save to my list</button>
+    </div>
+
+  </section>
+
+  <!-- The brain -->
+  <script src="app.js"></script>
+
+  <!-- The stage manager: screen-switching + origin-aware back. NOT the brain. -->
+  <script>
+    // Remembers which screen a detail card was opened FROM, so the back arrow
+    // can return there instead of always dumping you Home. Defaults to Home.
+    let backTarget = "screen-home";
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.getElementById("burger-menu").classList.remove("open");
+      window.scrollTo(0, 0);
+    }
+
+    // The back arrow on detail screens (Word / Phrase / Recollect) calls this.
+    // It returns you to wherever you came from.
+    function goBack() {
+      showScreen(backTarget);
+    }
+
+    // Tapping the Word / Phrase tile on Home. Re-fills the card with TODAY's
+    // pick (so a card left over from browsing All Entries can't linger), sets
+    // the "of the day" label, remembers Home as the back target, and opens it.
+    function openToday(type) {
+      backTarget = "screen-home";
+      showToday();   // refresh both detail cards from today's pick
+      if (type === "word") {
+        document.querySelector("#screen-word .detail-label").textContent = "Word of the day";
+        showScreen("screen-word");
+      } else {
+        document.getElementById("phrase-label").textContent = "Phrase of the day";
+        showScreen("screen-phrase");
+      }
+    }
+
+    function toggleMenu() {
+      document.getElementById("burger-menu").classList.toggle("open");
+    }
+
+    document.getElementById("today-date").textContent =
+      new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+  </script>
+
+</body>
+</html>

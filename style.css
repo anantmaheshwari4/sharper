@@ -1,0 +1,896 @@
+/* ============================================================
+   SHARPER — style.css
+   Dark mode only (v1). Built to the locked design spec.
+   ============================================================ */
+
+/* ---------- 0.2  COLOUR TOKENS (locked) ---------- */
+:root {
+  /* Surface / paper */
+  --surface:        #211D18;
+  --card:           #2E2A23;
+  --card-border:    #4A4339;
+
+  /* Ink / text */
+  --ink:            #F5EFE3;
+  --ink-body:       #E8E2D6;
+  --ink-muted:      #8A8170;
+  --ink-faint:      #6E6456;
+  --ink-placeholder:#5E564A;
+
+  /* Outlines on coloured blocks */
+  --outline:        #0A0806;
+
+  /* Pillar: Recollect (green) */
+  --green:          #3E8E6E;
+  --green-shadow:   #1F5C44;
+  --green-ink:      #0F3D29;
+
+  /* Pillar: Word (plum) */
+  --plum:           #8A5FB0;
+  --plum-shadow:    #4E2E70;
+
+  /* Pillar: Phrase (amber/orange) */
+  --phrase:         #D08840;
+  --phrase-shadow:  #8A5018;
+  --phrase-ink:     #5C3211;
+  --phrase-ink-bar: #3A2606;
+
+  /* Accent (burger + all back buttons) — butter amber */
+  --accent:         #E0A94A;
+  --accent-shadow:  #8A5A12;
+  --accent-ink:     #2A1F08;
+
+  /* Register chip (sits on --card) */
+  --chip-bg:        #3E342A;
+  --chip-border:    #6E5A44;
+  --chip-ink:       #D9C4A8;
+
+  /* Success banner (Add screen) */
+  --ok-bg:          #243528;
+  --ok-border:      #3E8E6E;
+  --ok-ink:         #A8DCC0;
+  --ok-ink-sub:     #8AB89E;
+  --ok-icon:        #6FC79A;
+
+  /* Error banner (Add screen) */
+  --err-bg:         #352523;
+  --err-border:     #C2603F;
+  --err-ink:        #E8A892;
+  --err-ink-sub:    #C99A88;
+  --err-icon:       #E0876A;
+
+  /* Recollect hit/miss soft tints (text + icon only) */
+  --got-it:         #8FBFA4;
+  --missed-it:      #CC9991;
+}
+
+/* ---------- RESET / FOUNDATION ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--surface);
+  color: var(--ink-body);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+/* ---------- SCREEN SHOW / HIDE ----------
+   showScreen() in index.html toggles .active.
+   Only the active screen is visible. Each screen is a
+   centred single column (360px reference width). */
+.screen {
+  display: none;
+}
+.screen.active {
+  display: block;
+  max-width: 360px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   1.  HOME  —  #screen-home
+   ============================================================ */
+
+/* ---- Header ---- */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 22px 18px 0;
+}
+
+.wordmark {
+  font-family: "DM Serif Display", serif;
+  font-size: 46px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+/* Burger diamond — wrapped so it centres in the wordmark's
+   cap-to-descender band (height 46px). */
+.diamond.burger {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border: 1.3px solid var(--outline);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 2.5px 2.5px 0 var(--accent-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 9px;        /* nudges the 32px diamond into the 46px band */
+}
+
+/* The menu glyph (three lines), counter-rotated upright */
+.burger-lines {
+  width: 15px;
+  height: 2px;
+  background: var(--accent-ink);
+  border-radius: 1px;
+  position: relative;
+  transform: rotate(-45deg);
+}
+.burger-lines::before,
+.burger-lines::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 15px;
+  height: 2px;
+  background: var(--accent-ink);
+  border-radius: 1px;
+}
+.burger-lines::before { top: -5px; }
+.burger-lines::after  { top: 5px; }
+
+/* ---- Burger popout menu ---- */
+.burger-menu {
+  display: none;
+  position: absolute;
+  top: 64px;
+  right: 18px;
+  background: var(--card);
+  border: 1.3px solid var(--outline);
+  border-radius: 3px;
+  box-shadow: 3px 3px 0 var(--outline);
+  z-index: 20;
+  overflow: hidden;
+}
+.burger-menu.open {
+  display: block;
+}
+.burger-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-body);
+  white-space: nowrap;
+}
+
+/* ---- Divider row ---- */
+.divider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 34px 2px 20px;   /* 34px = gap below header band */
+  padding: 0 18px;
+}
+.divider-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.divider-rule {
+  flex: 1;
+  height: 2px;
+  background: var(--card-border);
+}
+.divider-date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
+/* ---- Tiles ---- */
+.home-tiles {
+  padding: 0 18px;
+}
+.tile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 15px 18px;
+  border: 1.3px solid var(--outline);
+  border-radius: 3px;
+  margin-bottom: 15px;
+}
+.tile:last-child {
+  margin-bottom: 0;
+}
+
+.tile-text {
+  display: flex;
+  flex-direction: column;
+}
+.tile-title {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.tile-sub {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* Tile icon diamond (surface fill, no shadow) */
+.diamond.tile-icon {
+  width: 30px;
+  height: 30px;
+  background: var(--surface);
+  border: 1.3px solid var(--outline);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.diamond.tile-icon svg {
+  width: 16px;
+  height: 16px;
+  transform: rotate(-45deg);
+  stroke: var(--ink);
+}
+
+/* Per-pillar colours */
+.tile-recollect {
+  background: var(--green);
+  box-shadow: 4px 4px 0 var(--green-shadow);
+}
+.tile-recollect .tile-title,
+.tile-recollect .tile-sub {
+  color: var(--green-ink);
+}
+
+.tile-word {
+  background: var(--plum);
+  box-shadow: 4px 4px 0 var(--plum-shadow);
+}
+.tile-word .tile-title,
+.tile-word .tile-sub {
+  color: #FFFFFF;
+}
+
+.tile-phrase {
+  background: var(--phrase);
+  box-shadow: 4px 4px 0 var(--phrase-shadow);
+}
+.tile-phrase .tile-title,
+.tile-phrase .tile-sub {
+  color: var(--phrase-ink);
+}
+/* ============================================================
+   2.  WORD DETAIL  —  #screen-word
+   (template reused by Phrase + Recollect)
+   ============================================================ */
+
+/* ---- Coloured header bar ---- */
+.detail-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 20px;
+  background: var(--plum);
+  border-bottom: 2px solid var(--outline);
+}
+
+/* Back button = diamond, surface fill, same-colour-as-bar shadow */
+.detail-bar .back-btn {
+  width: 26px;
+  height: 26px;
+  background: var(--surface);
+  border: 1.3px solid var(--outline);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 0 var(--plum-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.detail-bar .back-btn span {
+  transform: rotate(-45deg);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.detail-label {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #FFFFFF;
+}
+
+/* ---- Delete affordance (added entries only) ---- */
+/* A trash diamond at the RIGHT edge of the bar, mirroring the back diamond.
+   Surface fill + same-colour-as-the-bar shadow (plum here; amber overridden
+   in the Phrase section). Hidden by default via .is-hidden — app.js reveals
+   it only when the open entry is one of YOUR added words. */
+.delete-btn {
+  width: 26px;
+  height: 26px;
+  margin-left: auto;            /* pushes it to the right edge of the bar */
+  background: var(--surface);
+  border: 1.3px solid var(--outline);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 0 var(--plum-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.delete-btn svg {
+  width: 13px;
+  height: 13px;
+  transform: rotate(-45deg);    /* counter-rotate so the trash sits upright */
+  color: var(--ink);
+}
+
+/* The inline confirm strip, sitting just under the bar. Quiet --card tone
+   (a destructive action, deliberately calm). Delete is the soft-red tint;
+   Cancel is muted. Hidden until the trash is tapped. */
+.delete-confirm {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  background: var(--card);
+  border-bottom: 1.5px solid var(--outline);
+}
+.delete-confirm-text {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-body);
+  margin-right: auto;           /* buttons hug the right */
+}
+.delete-confirm-yes,
+.delete-confirm-no {
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.delete-confirm-yes {
+  color: var(--missed-it);      /* soft muted red — the destructive choice */
+}
+.delete-confirm-no {
+  color: var(--ink-muted);      /* quiet — the safe choice */
+}
+
+/* Simple on/off switch app.js toggles. */
+.is-hidden {
+  display: none;
+}
+
+/* ---- The lifted card ---- */
+.detail-card {
+  margin: 24px 20px 0;
+  border: 1.5px solid var(--outline);
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 var(--outline);   /* near-black, NOT plum */
+  overflow: hidden;
+}
+
+/* ---- Colour panel (top of card) ---- */
+.detail-panel {
+  background: var(--plum);
+  border-bottom: 1.5px solid var(--outline);
+  padding: 18px 20px;
+}
+.hero {
+  font-family: "DM Serif Display", serif;
+  font-size: 40px;
+  font-weight: 400;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+
+/* ---- Body (lifted card surface) ---- */
+.detail-body {
+  background: var(--card);
+  padding: 20px 20px 24px;
+}
+
+.chip {
+  display: inline-block;
+  background: var(--chip-bg);
+  border: 1.3px solid var(--chip-border);
+  border-radius: 3px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--chip-ink);
+}
+
+.field {
+  margin-top: 18px;
+}
+.field:first-of-type {
+  margin-top: 22px;   /* first field, after chip */
+}
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.field-value {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ink-body);
+  line-height: 1.55;
+}
+
+/* EXAMPLE value is italic; meaning + replaces are not */
+#word-example,
+#phrase-example {
+  font-style: italic;
+}
+/* ============================================================
+   3.  PHRASE DETAIL  —  #screen-phrase  (amber overrides)
+   ============================================================ */
+.detail-bar-phrase {
+  background: var(--phrase);
+}
+.detail-bar-phrase .back-btn {
+  box-shadow: 2px 2px 0 var(--phrase-shadow);
+}
+.detail-bar-phrase .delete-btn {
+  box-shadow: 2px 2px 0 var(--phrase-shadow);
+}
+.detail-bar-phrase .detail-label {
+  color: var(--phrase-ink-bar);
+}
+.detail-panel-phrase {
+  background: var(--phrase);
+}
+.hero-phrase {
+  font-size: 32px;
+  line-height: 1.12;
+}
+/* ============================================================
+   5.  ALL ENTRIES  —  #screen-all
+   ============================================================ */
+
+/* ---- Header (app-surface, not a coloured bar) ---- */
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px 16px;
+  background: var(--surface);
+  border-bottom: 2px solid var(--card-border);
+}
+
+/* Amber back diamond (differs from detail screens' surface-fill back) */
+.back-btn-accent {
+  width: 26px;
+  height: 26px;
+  background: var(--accent);
+  border: 1.3px solid var(--outline);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  box-shadow: 2px 2px 0 var(--accent-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.back-btn-accent span {
+  transform: rotate(-45deg);
+  color: var(--accent-ink);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.list-title {
+  font-family: "DM Serif Display", serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.list-count {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+/* ---- Search box ---- */
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border: 1.5px solid var(--card-border);
+  border-radius: 3px;
+  padding: 11px 14px;
+  margin: 16px 20px 8px;
+}
+.search-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--ink-faint);
+}
+.search-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.search-box {
+  flex: 1;
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-body);
+}
+.search-box::placeholder {
+  color: var(--ink-faint);
+}
+
+/* ---- The list of entries ---- */
+#all-list {
+  padding: 8px 20px 0;
+}
+
+.entry-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 14px 4px;
+  border-bottom: 1.5px solid var(--card);
+  background: transparent;
+}
+.entry-row:last-child {
+  border-bottom: none;
+}
+
+.entry-term {
+  font-family: "DM Serif Display", serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+/* Diamond dot: plum = word, amber = phrase. No icon inside. */
+.entry-dot {
+  width: 12px;
+  height: 12px;
+  border: 1.2px solid var(--outline);
+  border-radius: 1px;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+.entry-dot-word {
+  background: var(--plum);
+}
+.entry-dot-phrase {
+  background: var(--phrase);
+}
+/* ============================================================
+   6.  ADD TO MY LIST  —  #screen-add
+   (header reuses .list-header / .back-btn-accent / .list-title)
+   ============================================================ */
+
+.add-body {
+  padding: 18px 20px 0;
+}
+
+/* Guidance line above the box */
+.add-guide {
+  font-size: 13px;
+  font-weight: 400;
+  color: #A8A092;            /* soft warm grey, between ink-body and ink-muted */
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.add-sep {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* The paste textarea (ready state) */
+.paste-box {
+  display: block;
+  width: 100%;
+  min-height: 200px;
+  background: var(--card);
+  border: 1.5px solid var(--card-border);
+  border-radius: 3px;
+  padding: 14px 15px;
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink-body);
+  resize: vertical;          /* keep a gentle resize; remove if it fights the look */
+  outline: none;
+}
+.paste-box::placeholder {
+  color: var(--ink-placeholder);
+}
+
+/* The amber save button */
+.save-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  background: var(--accent);
+  border: 1.5px solid var(--outline);
+  border-radius: 3px;
+  box-shadow: 3px 3px 0 var(--accent-shadow);
+  padding: 15px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent-ink);
+  letter-spacing: 0.3px;
+}
+
+/* ---- The status banner (success / error) ----
+   Empty by default = hidden. app.js adds .is-ok or .is-err plus content. */
+.paste-status {
+  display: none;             /* nothing to show until a message lands */
+}
+.paste-status.is-ok,
+.paste-status.is-err {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border-radius: 3px;
+  padding: 15px 16px;
+  margin-bottom: 18px;
+}
+
+/* The icon sits left of the text; app.js supplies the svg/glyph */
+.paste-status .status-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+.paste-status .status-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* Title line + optional sub-line inside the banner */
+.paste-status .status-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.paste-status .status-sub {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+.paste-status .status-sub strong {
+  font-weight: 700;          /* the offending field name, bolded */
+}
+
+/* Success variant */
+.paste-status.is-ok {
+  background: var(--ok-bg);
+  border: 1.5px solid var(--ok-border);
+}
+.paste-status.is-ok .status-icon { color: var(--ok-icon); }
+.paste-status.is-ok .status-title { color: var(--ok-ink); }
+.paste-status.is-ok .status-sub   { color: var(--ok-ink-sub); }
+
+/* Error variant */
+.paste-status.is-err {
+  background: var(--err-bg);
+  border: 1.5px solid var(--err-border);
+}
+.paste-status.is-err .status-icon { color: var(--err-icon); }
+.paste-status.is-err .status-title { color: var(--err-ink); }
+.paste-status.is-err .status-sub   { color: var(--err-ink-sub); }
+
+/* ============================================================
+   4.  RECOLLECT  —  #screen-retrieve  (green; reuses detail-card)
+   ============================================================ */
+
+/* ---- Green header bar override (reuses .detail-bar from Word) ---- */
+.detail-bar-recollect {
+  background: var(--green);
+}
+.detail-bar-recollect .back-btn {
+  box-shadow: 2px 2px 0 var(--green-shadow);
+}
+.detail-bar-recollect .detail-label {
+  color: #FFFFFF;
+}
+
+/* Queue counter, pushed to the right of the bar */
+.retrieve-counter {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-ink);
+  white-space: nowrap;
+}
+
+/* ---- Green colour panel override (reuses .detail-panel) ---- */
+.detail-panel-recollect {
+  background: var(--green);
+}
+
+/* Prompt-state panel is centred; revealed-state panel is left-aligned
+   (matches Word). Both inherit padding from .detail-panel. */
+.recollect-panel-prompt {
+  text-align: center;
+  padding: 22px 20px;
+}
+.recollect-panel-revealed {
+  padding: 18px 20px;
+}
+
+/* The small prompt label above the clue ("What's the sharper word for…") */
+.recollect-prompt-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-ink);
+  letter-spacing: 0.3px;
+  margin-bottom: 10px;
+}
+
+/* The clue (the "replaces" text shown as the hero in the prompt state).
+   Reuses .hero sizing but flexes smaller for long clues. */
+.recollect-clue {
+  font-size: 27px;
+  line-height: 1.15;
+}
+
+/* The revealed term: also a .hero, flexes by length like Word/Phrase. */
+.hero-recollect {
+  font-size: 32px;
+  line-height: 1.12;
+}
+
+/* ---- Reveal button (prompt state) ---- */
+.reveal-btn {
+  display: block;
+  width: 100%;
+  margin-top: 22px;
+  background: var(--green);
+  border: 1.5px solid var(--outline);
+  border-radius: 3px;
+  box-shadow: 3px 3px 0 var(--green-shadow);
+  padding: 14px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  letter-spacing: 0.3px;
+}
+
+/* The lowercase hint below the Reveal button */
+.reveal-hint {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-faint);
+}
+
+/* Example value in the revealed state is italic (matches detail screens) */
+.retrieve-example {
+  font-style: italic;
+}
+
+/* ---- "Did you remember it?" + judge buttons (below the card) ---- */
+.judge-prompt {
+  margin-top: 18px;
+  margin-bottom: 14px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.judge-buttons {
+  display: flex;
+  gap: 14px;
+  padding: 0 20px;
+}
+
+/* Both buttons sit in the calm card tone with a near-black shadow.
+   Only the icon + text carry a soft tint. Deliberately low-key. */
+.hit-btn,
+.miss-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1.5px solid var(--outline);
+  border-radius: 3px;
+  box-shadow: 3px 3px 0 var(--outline);
+  padding: 15px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+.hit-btn svg,
+.miss-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.hit-btn  { color: var(--got-it); }
+.miss-btn { color: var(--missed-it); }
+
+/* ---- Empty / caught-up fallback line ---- */
+.retrieve-empty {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
