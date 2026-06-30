@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sharper</title>
 
+  <!-- PWA: makes the app installable and themes the splash + status bars -->
+  <meta name="theme-color" content="#211D18">
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sharper">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +25,7 @@
   <section id="screen-home" class="screen active">
 
     <header class="home-header">
-      <span class="wordmark">Sharper</span>
+      <img src="sharper-logo.png" alt="Sharper" class="wordmark-img" style="height:34px; width:auto; display:block;">
       <button class="diamond burger" onclick="toggleMenu()" aria-label="Menu">
         <span class="burger-lines"></span>
       </button>
@@ -261,6 +269,16 @@
 
     document.getElementById("today-date").textContent =
       new Date().toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" });
+  </script>
+
+  <!-- PWA: register the service worker so the app caches itself + works offline.
+       This only switches it on; the caching logic lives in sw.js. -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js");
+      });
+    }
   </script>
 
 </body>
